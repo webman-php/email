@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>浏览页面</title>
+    <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
+    <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+</head>
+<body class="pear-container">
+
+
+<div class="layui-card">
+    <div class="layui-card-body">
+
+        <div class="layui-tab layui-tab-brief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">邮件设置</li>
+                <li>邮件测试</li>
+            </ul>
+            <div class="layui-tab-content">
+
+                <!-- 邮件设置 -->
+                <div class="layui-tab-item layui-show">
+
+                    <form class="layui-form" action="" onsubmit="return false" lay-filter="setting">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">SMTP服务器</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="Host" required lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">SMTP端口</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="Port" required lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">SMTP用户名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="Username" required lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">SMTP密码</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="Password" required lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">SMTP验证方式</label>
+                            <div class="layui-input-block">
+                                <select name="SMTPSecure" lay-verify="required" lay-search>
+                                    <option value="">无</option>
+                                    <option value="ssl">SSL</option>
+                                    <option value="tsl">TSL</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">默认发件人</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="From" required lay-verify="required" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit="" lay-filter="saveSetting">
+                                    保存
+                                </button>
+                                <button type="reset" class="pear-btn pear-btn-md">
+                                    重置
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="layui-tab-item">
+
+                    <form class="layui-form" onsubmit="return false" lay-filter="test">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">发件人</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="From" required  lay-verify="required" placeholder="发件人" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">收件人</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="To" required  lay-verify="required" placeholder="收件人" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">主题</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="Subject" required  lay-verify="required" placeholder="收件人" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">邮件内容</label>
+                            <div class="layui-input-block">
+                                <textarea name="Content" placeholder="请输入内容" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit="" lay-filter="sendMail">
+                                    发送
+                                </button>
+                                <button type="reset" class="pear-btn pear-btn-md">
+                                    重置
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="/app/admin/component/layui/layui.js"></script>
+<script src="/app/admin/component/pear/pear.js"></script>
+<script src="/app/admin/admin/js/common.js"></script>
+
+<script>
+    layui.use(["form", "popup"], function(){
+        let form = layui.form;
+        let $ = layui.jquery;
+
+        $.ajax({
+            url: "/app/email/admin/setting/get",
+            success: function (res) {
+                if (res.code) {
+                    return layui.popup.failure(res.msg);
+                }
+                form.val("setting", res.data);
+                form.val("test", res.data);
+            }
+        });
+
+        // 提交表单
+        form.on("submit(saveSetting)", function(data){
+            $.ajax({
+                url: "/app/email/admin/setting/save",
+                dataType: "json",
+                type: "POST",
+                data: data.field,
+                success: function (res) {
+                    if (res.code) {
+                        return layui.popup.failure(res.msg);
+                    }
+                    form.val("test", data.field);
+                    return layui.popup.success("操作成功");
+                }
+            });
+            return false;
+        });
+
+        // 提交表单
+        form.on("submit(sendMail)", function(data){
+            $.ajax({
+                url: "/app/email/admin/setting/test",
+                dataType: "json",
+                type: "POST",
+                data: data.field,
+                success: function (res) {
+                    if (res.code) {
+                        return layui.popup.failure(res.msg);
+                    }
+                    return layui.popup.success("操作成功");
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+<style>
+
+    .layui-input-block {
+        margin-left: 150px;
+    }
+
+    .layui-form-label {
+        width:120px;
+    }
+
+    form {
+        width: 520px;
+    }
+
+</style>
+</body>
+</html>
+

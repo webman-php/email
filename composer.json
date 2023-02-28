@@ -1,0 +1,14 @@
+{
+  "name": "webman/email",
+  "type": "project",
+  "license": "MIT",
+  "description": "Webman email app plugin",
+  "require": {
+    "phpmailer/phpmailer": "^6.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Webman\\Email\\": "src"
+    }
+  }
+}
