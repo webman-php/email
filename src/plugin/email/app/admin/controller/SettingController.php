@@ -81,8 +81,6 @@ class SettingController
      */
     public function test(Request $request): Response
     {
-        Install::install();
-        return \response();
         $from = $request->post('From');
         $to = $request->post('To');
         $subject = $request->post('Subject');
