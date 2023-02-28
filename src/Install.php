@@ -9,8 +9,8 @@ class Install
      * @var array
      */
     protected static $pathRelation = array (
-  'plugin/email' => 'plugin/email',
-);
+        'plugin/email' => 'plugin/email',
+    );
 
     /**
      * Install
@@ -44,7 +44,7 @@ class Install
                 }
             }
             //symlink(__DIR__ . "/$source", base_path()."/$dest");
-            copy_dir(__DIR__ . "/Install.php", base_path()."/$dest");
+            copy_dir(__DIR__ . "/$source", base_path()."/$dest");
             echo "Create $dest
 ";
         }
@@ -70,5 +70,5 @@ class Install
             remove_dir($path);
         }
     }
-    
+
 }
