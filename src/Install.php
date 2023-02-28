@@ -1,6 +1,8 @@
 <?php
 namespace Webman\Email;
 
+use Throwable;
+
 class Install
 {
     const WEBMAN_PLUGIN = true;
@@ -48,6 +50,7 @@ class Install
             echo "Create $dest
 ";
         }
+        \plugin\email\api\Install::install();
     }
 
     /**
@@ -56,6 +59,10 @@ class Install
      */
     public static function uninstallByRelation()
     {
+        try {
+            \plugin\email\api\Install::uninstall();
+        } catch (Throwable $exception){}
+        
         foreach (static::$pathRelation as $source => $dest) {
             $path = base_path()."/$dest";
             if (!is_dir($path) && !is_file($path)) {
