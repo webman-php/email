@@ -5,7 +5,6 @@ namespace plugin\email\app\admin\controller;
 use PHPMailer\PHPMailer\Exception;
 use plugin\admin\app\model\Option;
 use plugin\email\api\Email;
-use plugin\email\api\Install;
 use support\Request;
 use support\Response;
 use function view;
@@ -20,7 +19,7 @@ class SettingController
      * 邮件设置页
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return view('setting/index');
     }

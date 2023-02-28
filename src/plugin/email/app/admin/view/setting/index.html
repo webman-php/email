@@ -133,6 +133,7 @@
     layui.use(["form", "popup"], function(){
         let form = layui.form;
         let $ = layui.jquery;
+        let layer = layui.layer;
 
         $.ajax({
             url: "/app/email/admin/setting/get",
@@ -145,7 +146,7 @@
             }
         });
 
-        // 提交表单
+        // 保存设置
         form.on("submit(saveSetting)", function(data){
             $.ajax({
                 url: "/app/email/admin/setting/save",
@@ -163,8 +164,9 @@
             return false;
         });
 
-        // 提交表单
+        // 发送邮件
         form.on("submit(sendMail)", function(data){
+            let loading = layer.load();
             $.ajax({
                 url: "/app/email/admin/setting/test",
                 dataType: "json",
@@ -175,6 +177,9 @@
                         return layui.popup.failure(res.msg);
                     }
                     return layui.popup.success("操作成功");
+                },
+                complete: function () {
+                    layer.closeAll('loading');
                 }
             });
             return false;
