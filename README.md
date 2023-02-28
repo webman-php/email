@@ -1,4 +1,4 @@
 # email
 webman email app plugin
 
-https://www.workerman.net/plugin/109
+https://www.workerman.net/app/view/email
