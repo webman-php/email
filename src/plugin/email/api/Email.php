@@ -12,9 +12,14 @@ class Email
 {
 
     /**
-     * Option 表的name字段值
+     * Option表的name字段值
      */
-    const OPTION_NAME = 'email_setting';
+    const SETTING_OPTION_NAME = 'email_setting';
+
+    /**
+     * Option表模版前缀
+     */
+    const TEMPLATE_OPTION_PREFIX = 'email_template_';
 
     /**
      * @param $from
@@ -36,6 +41,37 @@ class Email
     }
 
     /**
+     * 按照模版发送
+     * @param $templateName
+     * @param string|array $to
+     * @param array $data
+     * @return void
+     * @throws BusinessException
+     * @throws Exception
+     */
+    public static function sendByTemplate($templateName, $to, array $data = [])
+    {
+        $emailTemplate = Option::where('name', "email_template_$templateName")->value('value');
+        $emailTemplate = $emailTemplate ? json_decode($emailTemplate, true) : null;
+        if (!$emailTemplate) {
+            throw new BusinessException('模版不存在');
+        }
+        $subject = $emailTemplate['subject'];
+        $content = $emailTemplate['content'];
+        var_dump($data);
+        if ($data) {
+            $search = [];
+            foreach ($data as $key => $value) {
+                $search[] = '{' . $key . '}';
+            }
+            var_dump($search);
+            $content = str_replace($search, array_values($data), $content);
+        }
+        $config = static::getConfig();
+        static::send($config['From'] ?? '', $to, $subject, $content);
+    }
+
+    /**
      * Get Mailer
      * @return PHPMailer
      * @throws BusinessException
@@ -45,8 +81,7 @@ class Email
         if (!class_exists(PHPMailer::class)) {
             throw new BusinessException('请执行 composer require phpmailer/phpmailer 并重启');
         }
-        $config = Option::where('name', static::OPTION_NAME)->value('value');
-        $config = $config ? json_decode($config, true) : false;
+        $config = static::getConfig();
         if (!$config) {
             throw new BusinessException('未设置邮件配置');
         }
@@ -64,6 +99,16 @@ class Email
         $mailer->SMTPSecure = $map[$config['SMTPSecure']] ?? '';
         $mailer->Port = $config['Port'];
         return $mailer;
+    }
+
+    /**
+     * 获取配置
+     * @return array|null
+     */
+    public static function getConfig()
+    {
+        $config = Option::where('name', static::SETTING_OPTION_NAME)->value('value');
+        return $config ? json_decode($config, true) : null;
     }
 
 }
