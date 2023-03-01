@@ -107,10 +107,20 @@
                 });
                 $('select[name="name"]').append(options);
                 let name = layui.url().search.name;
-                layui.form.val("test-template-form", {name: name, content: map[name]});
+
+                let createData = function (content) {
+                    let ret, data = {}, reg=/\{(.*?)\}/g;
+                    let tmp = content.match(reg);
+                    tmp && $.each(tmp, function (k, v) {
+                        v = v.substr(1, v.length -2);
+                        data[v] = 'xxx';
+                    });
+                    return JSON.stringify(data);
+                };
+                layui.form.val("test-template-form", {name: name, content: map[name], data: createData(map[name])});
                 layui.form.on("select(name)", function (data) {
                     let name = data.value;
-                    layui.form.val("test-template-form", {content: map[name]});
+                    layui.form.val("test-template-form", {content: map[name], data: createData(map[name])});
                 });
             }
         });
