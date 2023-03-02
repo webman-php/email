@@ -92,7 +92,7 @@ class SettingController
     }
 
     /**
-     * 邮件测试
+     * 邮件模版测试
      * @param Request $request
      * @return Response
      * @throws Exception|BusinessException
