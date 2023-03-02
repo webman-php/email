@@ -138,8 +138,6 @@
                         return layui.popup.failure(res.msg);
                     }
                     return layui.popup.success("操作成功", function () {
-                        return;
-                        parent.refreshTable();
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
                     });
                 }
