@@ -49,7 +49,7 @@ class Email
      * @throws BusinessException
      * @throws Exception
      */
-    public static function sendByTemplate($templateName, $to, array $data = [])
+    public static function sendByTemplate($to, $templateName, array $templateData = [])
     {
         $emailTemplate = Option::where('name', "email_template_$templateName")->value('value');
         $emailTemplate = $emailTemplate ? json_decode($emailTemplate, true) : null;
@@ -58,14 +58,12 @@ class Email
         }
         $subject = $emailTemplate['subject'];
         $content = $emailTemplate['content'];
-        var_dump($data);
-        if ($data) {
+        if ($templateData) {
             $search = [];
-            foreach ($data as $key => $value) {
+            foreach ($templateData as $key => $value) {
                 $search[] = '{' . $key . '}';
             }
-            var_dump($search);
-            $content = str_replace($search, array_values($data), $content);
+            $content = str_replace($search, array_values($templateData), $content);
         }
         $config = static::getConfig();
         static::send($config['From'] ?? '', $to, $subject, $content);

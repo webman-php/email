@@ -106,7 +106,7 @@ class SettingController
         $to = $request->post('to');
         $data = $request->post('data');
         $data = $data ? json_decode($data, true) : [];
-        Email::sendByTemplate($name, $to, $data);
+        Email::sendByTemplate($to, $name, $data);
         return json(['code' => 0, 'msg' => 'ok']);
     }
 
