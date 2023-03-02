@@ -160,13 +160,17 @@ class SettingController
     {
         if ($request->method() === 'POST') {
             $name = $request->post('name');
+            $newName = $request->post('new_name');
             if (!Template::get($name)) {
                 return json(['code' => 1, 'msg' => '模版不存在']);
+            }
+            if ($name != $newName) {
+                Template::delete([$name]);
             }
             $from = $request->post('from');
             $subject = $request->post('subject');
             $content = $request->post('content');
-            Template::save($name, ['from' => $from, 'subject' => $subject, 'content' => $content]);
+            Template::save($newName, ['from' => $from, 'subject' => $subject, 'content' => $content]);
             return json(['code' => 0, 'msg' => 'ok']);
         }
         return view('template/update');
