@@ -71,6 +71,12 @@ class SettingController
             $option->name = $name;
             $option->value = $value;
             $option->save();
+
+            // 默认生成一个验证码邮件模版
+            $templateName = 'captcha';
+            if (!Template::get($templateName)) {
+                Template::save($templateName, $data['From'], '验证码', '验证码为 {code} 。如您未发送过该邮件，请忽略。');
+            }
         }
         return json(['code' => 0, 'msg' => 'ok']);
     }
@@ -146,7 +152,7 @@ class SettingController
             $from = $request->post('from');
             $subject = $request->post('subject');
             $content = $request->post('content');
-            Template::save($name, ['from' => $from, 'subject' => $subject, 'content' => $content]);
+            Template::save($name, $from, $subject, $content);
         }
         return view('template/insert');
     }
@@ -170,7 +176,7 @@ class SettingController
             $from = $request->post('from');
             $subject = $request->post('subject');
             $content = $request->post('content');
-            Template::save($newName, ['from' => $from, 'subject' => $subject, 'content' => $content]);
+            Template::save($newName, $from, $subject, $content);
             return json(['code' => 0, 'msg' => 'ok']);
         }
         return view('template/update');
