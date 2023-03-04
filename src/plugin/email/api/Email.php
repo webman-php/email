@@ -42,9 +42,9 @@ class Email
 
     /**
      * 按照模版发送
-     * @param $templateName
      * @param string|array $to
-     * @param array $data
+     * @param $templateName
+     * @param array $templateData
      * @return void
      * @throws BusinessException
      * @throws Exception
