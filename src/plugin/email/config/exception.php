@@ -1,5 +1,5 @@
 <?php
 
 return [
-    '' => \plugin\email\app\exception\Handler::class,
+    '' => support\exception\Handler::class,
 ];
