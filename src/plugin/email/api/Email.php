@@ -34,7 +34,7 @@ class Email
         $mailer = static::getMailer();
         call_user_func_array([$mailer, 'setFrom'], (array)$from);
         call_user_func_array([$mailer, 'addAddress'], (array)$to);
-        $mailer->Subject = $subject;
+        $mailer->Subject = "=?UTF-8?B?".base64_encode($subject)."?=";
         $mailer->isHTML(true);
         $mailer->Body = $content;
         $mailer->send();
@@ -88,6 +88,7 @@ class Email
         $mailer->isSMTP();
         $mailer->Host = $config['Host'];
         $mailer->SMTPAuth = true;
+        $mailer->CharSet = 'UTF-8';
         $mailer->Username = $config['Username'];
         $mailer->Password = $config['Password'];
         $map = [
